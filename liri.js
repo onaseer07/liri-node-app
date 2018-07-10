@@ -10,13 +10,14 @@ let spotify = new Spotify(keys.spotify);
 let Twitter = require('twitter');
 let client = new Twitter(keys.twitter);
 let params = {user_id:'OzLiri'};
-
 let actions = process.argv[2];
+let nodeArgArray = process.argv.slice(3,process.argv.length+1);
+let Title = nodeArgArray.join(" ").replace(',',' ');
 /*let nodeArgArray = process.argv.slice(3,process.argv.length+1);
-let songTitle = nodeArgArray.join(" ").replace(',',' ');
-let cleanString = songTitle.trim(' ');
+let Title = nodeArgArray.join(" ").replace(',',' ');
+let cleanString = Title.trim(' ');
 console.log(nodeArgArray);
-console.log(songTitle);
+console.log(Title);
 console.log(cleanString);*/
     if (actions == "my-tweets"){
         client.get('statuses/user_timeline', params, function (err, tweets, response){
@@ -31,29 +32,42 @@ console.log(cleanString);*/
         });
     } else if (actions == "spotify-this-song"){
 
-        spotify.search({ type: 'track', query: songTitle, limit: '3'}, function (err, data) {
-            if(err) {
-                console.error(err);
-            }else {
-                let nodeArgArray = process.argv.slice(3,process.argv.length+1);
-                let songTitle = nodeArgArray.join(" ").replace(',',' ');
-                let cleanString = songTitle.trim(' ');
-                console.log(nodeArgArray);
-                console.log(songTitle);
-                console.log(cleanString);
-                let result = data.tracks.items;
-                
-                for(let i = 0; i <result.length; i++){
-                    console.log(result[i].name);
-        
+        if (Title == null || Title == "" || Title ==[]){
+            Title = "The Sign";
+            console.log(Title);
+            spotify.search(
+                { type: 'track', query: Title, limit: '1'}, function (err, data) {
+                if(err) {
+                    console.error(err);
+                }else {
+    
+                    let result = data.tracks.items;
+                    console.log("Artist: "+result[0].artists[0].name);
+                    console.log("Song Name: "+result[0].name);
+                    console.log("Preview this song: "+result[0].preview_url);
+                    console.log("Album: "+result[0].album.name);     
             };
-        };
-    });
+            });
+        }else {
+            spotify.search({ type: 'track', query: Title, limit: '1'}, function (err, data) {
+                if(err) {
+                    console.error(err);
+                }else {
+    
+                    let result = data.tracks.items;
+                    console.log("Artist: "+result[0].artists[0].name);
+                    console.log("Song Name: "+result[0].name);
+                    console.log("Preview this song: "+result[0].preview_url);
+                    console.log("Album: "+result[0].album.name);     
+            };
+        });
+        }
+
 } else if (actions == "movie-this"){
     let movieTitle = process.argv[3];
     // Include the request npm package (Don't forget to run "npm install request" in this folder first!)
     let request = require("request");
-    request("http://www.omdbapi.com/?t="+movieTitle+"&y=&plot=short&apikey=trilogy", function(error, response, body) {
+    request("http://www.omdbapi.com/?t="+Title+"&y=&plot=short&apikey=trilogy", function(error, response, body) {
     if (!error && response.statusCode === 200) {
 
         // Title of the movie.
@@ -88,22 +102,17 @@ fs.readFile('random.txt','utf8',function(error,data){
     if (error){
         console.log(error);
     }else {
-        console.log(data.replace(',',' '));
-        console.log("$ node liri.js "+data.replace(',',' '));
         let nodeArgArray = process.argv.slice(3,process.argv.length+1);
-        let songTitle = nodeArgArray.join(" ").replace(',',' ');
-        let cleanString = songTitle.trim(' ');
-        console.log(nodeArgArray);
+        let Title = nodeArgArray.join(" ").replace(',',' ');
+        let cleanString = Title.trim(' ');
+
         //console.log("node liri.js "+data+cleanString);
            /*for (let i = 0; i<dataArr.length;i++){
                console.log(dataArr[i]);
            }*/
       }
 })
-        //Artist(s)
-        //Song Name
-        //A preview Link
-        //Album of the song
+
 
 
 
