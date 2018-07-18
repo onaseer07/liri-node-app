@@ -93,25 +93,25 @@ console.log(cleanString);*/
         }
     });
 } else if (actions == "do-what-it-says"){
-
+    let fs = require('fs');
+    fs.readFile('random.txt','utf8',function(error,data){
+        if (error){
+            console.log(error);
+        }else {
+            let nodeArgArray = process.argv.slice(3,process.argv.length+1);
+            let Title = nodeArgArray.join(" ").replace(',',' ');
+            let cleanString = Title.trim(' ');
+    
+            console.log("node liri.js "+data+cleanString);
+               /*for (let i = 0; i<dataArr.length;i++){
+                   console.log(dataArr[i]);
+               }*/
+          }
+    })
     
 }
 
-let fs = require('fs');
-fs.readFile('random.txt','utf8',function(error,data){
-    if (error){
-        console.log(error);
-    }else {
-        let nodeArgArray = process.argv.slice(3,process.argv.length+1);
-        let Title = nodeArgArray.join(" ").replace(',',' ');
-        let cleanString = Title.trim(' ');
 
-        //console.log("node liri.js "+data+cleanString);
-           /*for (let i = 0; i<dataArr.length;i++){
-               console.log(dataArr[i]);
-           }*/
-      }
-})
 
 
 
